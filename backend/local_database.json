@@ -1,0 +1,84 @@
+{
+  "contacts": [
+    {
+      "id": "seed-contact-1",
+      "name": "John Stark",
+      "email": "john@starkindustries.com",
+      "phone": "+1 415-555-0199",
+      "company": "Stark Industries",
+      "projectType": "AI Solutions & Automation",
+      "budget": "$10,000 - $25,000",
+      "message": "We need an integrated AI agent system that monitors our heavy machinery logistics and generates real-time scheduling guides. Essential to have Firestore safety rules.",
+      "status": "new",
+      "createdAt": "2026-06-14T08:51:32.879Z"
+    },
+    {
+      "id": "seed-contact-2",
+      "name": "Sarah Jenkins",
+      "email": "sarah@apexledger.dev",
+      "phone": "+44 20-7946-0958",
+      "company": "Apex Ledger Corp",
+      "projectType": "PayPal Integration",
+      "budget": "$5,000 - $10,000",
+      "message": "Looking for robust Express backend microservice supporting structured PayPal callbacks and automatic PDF layout invoice generation.",
+      "status": "reviewed",
+      "createdAt": "2026-06-12T08:51:32.879Z"
+    }
+  ],
+  "payments": [
+    {
+      "id": "PAYID-MIN827136284X8911",
+      "clientName": "Elena Rostova",
+      "clientEmail": "elena@synthetix.io",
+      "amount": 4999,
+      "package": "Professional Package",
+      "status": "approved",
+      "createdAt": "2026-06-13T08:51:32.879Z"
+    },
+    {
+      "id": "PAYID-MAX991204859B1234",
+      "clientName": "Marcus Vance",
+      "clientEmail": "marcus@apexledger.dev",
+      "amount": 2500,
+      "package": "Starter Package",
+      "status": "approved",
+      "createdAt": "2026-06-09T08:51:32.879Z"
+    }
+  ],
+  "projects": [
+    {
+      "id": "seed-proj-1",
+      "clientName": "Elena Rostova",
+      "clientEmail": "elena@synthetix.io",
+      "title": "Professional Package Implementation",
+      "service": "AI Solutions & Automation",
+      "status": "pending",
+      "package": "Professional Package",
+      "cost": 4999,
+      "description": "Auto-generated delivery track for Elena Rostova's purchased Professional Package. Paid via PayPal Transaction ID: PAYID-MIN827136284X8911.",
+      "createdAt": "2026-06-13T08:51:32.879Z"
+    }
+  ],
+  "consultations": [
+    {
+      "id": "seed-consult-1",
+      "clientName": "David Kim",
+      "clientEmail": "kim.david@spacetech.co",
+      "date": "2026-06-16",
+      "timeSlot": "10:00 AM - 11:00 AM (EST)",
+      "topic": "Enterprise AI & Scalability Planning",
+      "description": "Evaluating migration from legacy neural architectures to customized multi-agent setups.",
+      "paid": true,
+      "createdAt": "2026-06-14T08:51:32.879Z"
+    }
+  ],
+  "admins": [
+    {
+      "id": "kdpranga144",
+      "email": "kdpranga144@gmail.com",
+      "role": "admin",
+      "createdAt": "2026-06-14T08:51:32.879Z"
+    }
+  ],
+  "users": []
+}

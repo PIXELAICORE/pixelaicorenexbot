@@ -1,0 +1,6 @@
+{
+  "name": "Pixel AICore & Nexbot",
+  "description": "Premium full-stack AI technology agency website featuring integrated cognitive service menus, filterable layout showcases, PayPal Sandbox checkouts, downloadable receipts, and strategic consultations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

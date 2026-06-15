@@ -1,0 +1,187 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User profile records containing fundamental info and system privileges.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The unique Firebase Authentication security identifier." },
+        "email": { "type": "string", "description": "User primary email address." },
+        "displayName": { "type": "string", "description": "User preferred display name." },
+        "photoURL": { "type": "string", "description": "User avatar image location." },
+        "role": { "type": "string", "enum": ["user", "admin"], "description": "System access privileges." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "The server-verified initial database record creation date." }
+      },
+      "required": ["uid", "email", "role", "createdAt"]
+    },
+    "Contact": {
+      "title": "Contact Submission",
+      "description": "Client inquiry message or request sent from the Contact form.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier of the contact request." },
+        "name": { "type": "string", "description": "The inquirer's full name." },
+        "email": { "type": "string", "description": "The inquirer's communication email address." },
+        "phone": { "type": "string", "description": "The inquirer's contact number." },
+        "company": { "type": "string", "description": "The inquirer's company name." },
+        "projectType": { "type": "string", "description": "Kind of service wanted (e.g., AI Solutions, Web Dev)." },
+        "budget": { "type": "string", "description": "The allocated budget range." },
+        "message": { "type": "string", "description": "Detailed explanation of the project or query." },
+        "status": { "type": "string", "enum": ["new", "reviewed", "contacted", "completed"], "description": "The workflow review status." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server session timestamp." }
+      },
+      "required": ["name", "email", "projectType", "message", "status", "createdAt"]
+    },
+    "Project": {
+      "title": "Project Lead / Record",
+      "description": "A collaborative active deliverable or sales lead.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique project identifier." },
+        "clientUid": { "type": "string", "description": "UID of the client user who ordered it, if authenticated." },
+        "clientName": { "type": "string", "description": "Name of the client." },
+        "clientEmail": { "type": "string", "description": "Primary contact email address for this project." },
+        "title": { "type": "string", "description": "Brief project title." },
+        "service": { "type": "string", "description": "The selected agency service." },
+        "status": { "type": "string", "enum": ["pending", "in-progress", "completed", "cancelled"], "description": "Production state." },
+        "package": { "type": "string", "description": "The purchased or requested quote tier (Starter, Professional, Enterprise)." },
+        "cost": { "type": "number", "description": "Price agreement in USD." },
+        "description": { "type": "string", "description": "Additional project directives or scope details." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Initial record timestamp." }
+      },
+      "required": ["title", "clientEmail", "service", "status", "createdAt"]
+    },
+    "Payment": {
+      "title": "Transaction Receipt",
+      "description": "Store reference logs of payments handled through the PayPal checkout checkout flow.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "The PayPal checkout tracking reference, or custom unique collection ID." },
+        "clientUid": { "type": "string", "description": "Firebase relative auth ID of the buyer, if logged in." },
+        "clientName": { "type": "string", "description": "Name of the payer." },
+        "clientEmail": { "type": "string", "description": "PayPal account email, or primary user email info." },
+        "amount": { "type": "number", "description": "The total currency size paid in USD." },
+        "package": { "type": "string", "description": "Bought package tier (Starter, Professional, Enterprise)." },
+        "status": { "type": "string", "enum": ["approved", "pending", "failed", "refunded"], "description": "Transaction processing state." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Payment authorization date." }
+      },
+      "required": ["id", "clientEmail", "amount", "package", "status", "createdAt"]
+    },
+    "Service": {
+      "title": "Agency Service",
+      "description": "Agency operational service capabilities catalog item.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Technical tag representing the service capability." },
+        "title": { "type": "string", "description": "Human-readable service title." },
+        "description": { "type": "string", "description": "Detailed description of what the service entails." },
+        "icon": { "type": "string", "description": "Lucide icon name representation." },
+        "category": { "type": "string", "description": "Broad operational domain classification." },
+        "price": { "type": "string", "description": "Starting budget scope estimation." }
+      },
+      "required": ["id", "title", "description", "icon"]
+    },
+    "Testimonial": {
+      "title": "Client Review Feedback",
+      "description": "Authenticated reviews and endorsements of previous customer delivery.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "author": { "type": "string" },
+        "role": { "type": "string" },
+        "company": { "type": "string" },
+        "rating": { "type": "number" },
+        "text": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["author", "rating", "text", "createdAt"]
+    },
+    "Consultation": {
+      "title": "Consultation Booking",
+      "description": "Calendar reservations and details of booked strategy briefings.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "clientName": { "type": "string" },
+        "clientEmail": { "type": "string" },
+        "date": { "type": "string" },
+        "timeSlot": { "type": "string" },
+        "topic": { "type": "string" },
+        "description": { "type": "string" },
+        "paid": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["clientName", "clientEmail", "date", "timeSlot", "paid", "createdAt"]
+    },
+    "PortfolioItem": {
+      "title": "Portfolio Showcase Item",
+      "description": "Selected showcase of our prior agency development items.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "description": { "type": "string" },
+        "image": { "type": "string" },
+        "tags": { "type": "array" },
+        "link": { "type": "string" }
+      },
+      "required": ["id", "title", "category", "description", "image", "tags"]
+    },
+    "Blog": {
+      "title": "News Feed Article",
+      "description": "Published technical intelligence insights or business feed announcements.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "summary": { "type": "string" },
+        "content": { "type": "string" },
+        "author": { "type": "string" },
+        "category": { "type": "string" },
+        "readTime": { "type": "string" },
+        "image": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "title", "summary", "content", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Registered credentials and system metadata."
+    },
+    "/contacts/{id}": {
+      "schema": "Contact",
+      "description": "Inquiries received via the lead contact form."
+    },
+    "/projects/{id}": {
+      "schema": "Project",
+      "description": "Leads and active tasks that client users or admins manage."
+    },
+    "/payments/{id}": {
+      "schema": "Payment",
+      "description": "PayPal client payments details."
+    },
+    "/services/{id}": {
+      "schema": "Service",
+      "description": "Listed portfolio service menu items."
+    },
+    "/testimonials/{id}": {
+      "schema": "Testimonial",
+      "description": "Endorsements listed on home and pricing systems."
+    },
+    "/consultations/{id}": {
+      "schema": "Consultation",
+      "description": "Strategic sessions scheduled and booked by prospective accounts."
+    },
+    "/portfolio/{id}": {
+      "schema": "PortfolioItem",
+      "description": "Showcase portfolio catalog pieces."
+    },
+    "/blog/{id}": {
+      "schema": "Blog",
+      "description": "Aesthetic agency announcements and white-paper literature pieces."
+    }
+  }
+}

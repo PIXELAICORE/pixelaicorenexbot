@@ -504,15 +504,15 @@ export default function App() {
               <ul className="space-y-2 text-xs">
                 <li className="flex items-center space-x-2 text-slate-500">
                   <Mail className="w-3.5 h-3.5 text-blue-500 shrink-0" />
-                  <span>partners@pixel-aicore.agency</span>
+                  <span>pixelaicorenexbot@gmail.com</span>
                 </li>
                 <li className="flex items-center space-x-2 text-slate-500">
                   <Phone className="w-3.5 h-3.5 text-purple-500 shrink-0" />
-                  <span>+1 415-555-0199</span>
+                  <span>+94775304888</span>
                 </li>
                 <li className="flex items-center space-x-2 text-slate-500">
                   <MapPin className="w-3.5 h-3.5 text-cyan-500 shrink-0" />
-                  <span>AI Hub Suite 1200, San Francisco</span>
+                  <span>408/A, Dehigahawela Maha Induruwa, Sri Lanka</span>
                 </li>
               </ul>
             </div>

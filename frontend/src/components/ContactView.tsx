@@ -128,17 +128,17 @@ export default function ContactView({ prefilledService, onBookConsultation }: Co
               <div className="space-y-4">
                 <div className="flex items-center space-x-3 text-slate-300">
                   <MapPin className="w-5 h-5 text-blue-400 shrink-0" />
-                  <span className="text-sm">Suite 1200, AI Innovation Hub, San Francisco, CA 94107</span>
+                  <span className="text-sm">408/A, Dehigahawela Maha Induruwa, Sri Lanka</span>
                 </div>
                 
                 <div className="flex items-center space-x-3 text-slate-300">
                   <Mail className="w-5 h-5 text-purple-400 shrink-0" />
-                  <span className="text-sm">partners@pixel-aicore.agency</span>
+                  <span className="text-sm">pixelaicorenexbot@gmail.com</span>
                 </div>
 
                 <div className="flex items-center space-x-3 text-slate-300">
                   <Phone className="w-5 h-5 text-cyan-400 shrink-0" />
-                  <span className="text-sm">+1 415-555-0199</span>
+                  <span className="text-sm">+94775304888</span>
                 </div>
               </div>
             </div>
@@ -230,7 +230,7 @@ export default function ContactView({ prefilledService, onBookConsultation }: Co
                         type="text"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        placeholder="+1 415-555-0199"
+                        placeholder="+94775304888"
                         className="w-full px-4 py-3 rounded-lg bg-slate-950 border border-white/5 text-sm text-white focus:border-blue-500 focus:outline-[#3B82F6] transition-colors"
                       />
                     </div>

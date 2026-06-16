@@ -3,29 +3,14 @@ import express from 'express';
 import path from 'path';
 import fs from 'fs';
 import cors from 'cors';
-import { initializeApp } from 'firebase/app';
-import { 
-  getFirestore, 
-  doc, 
-  collection, 
-  addDoc, 
-  getDocs, 
-  getDoc,
-  setDoc,
-  updateDoc, 
-  deleteDoc,
-  query, 
-  where, 
-  orderBy,
-  limit,
-  serverTimestamp,
-  FieldValue
-} from 'firebase/firestore';
-import firebaseConfig from '../firebase-applet-config.json' with { type: 'json' };
+import { db } from './src/lib/firebase/admin.js';
 
-// Initialize Firebase in Node environment for backend persistence
-const firebaseApp = initializeApp(firebaseConfig);
-const db = getFirestore(firebaseApp, firebaseConfig.firestoreDatabaseId);
+// Firebase config object for metadata endpoints
+const firebaseConfig = {
+  projectId: process.env.FIREBASE_PROJECT_ID || 'pixel-aicore-nexbot',
+  firestoreDatabaseId: process.env.FIREBASE_DATABASE_ID || '(default)',
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN || 'pixel-aicore-nexbot.firebaseapp.com'
+};
 
 // Handle resilient path finding for the local JSON backup database
 let LOCAL_STORE_PATH = path.join(process.cwd(), 'local_database.json');
@@ -138,9 +123,9 @@ function writeLocalStore(store: any) {
 
 async function safeGetDocs(collectionName: string) {
   try {
-    const snap = await getDocs(collection(db, collectionName));
+    const snap = await db.collection(collectionName).get();
     const results: any[] = [];
-    snap.forEach(doc => {
+    snap.forEach((doc: any) => {
       results.push({ id: doc.id, ...doc.data() });
     });
     return results;
@@ -153,8 +138,8 @@ async function safeGetDocs(collectionName: string) {
 
 async function safeGetDoc(collectionName: string, docId: string) {
   try {
-    const snap = await getDoc(doc(db, collectionName, docId));
-    if (snap.exists()) {
+    const snap = await db.collection(collectionName).doc(docId).get();
+    if (snap.exists) {
       return { id: snap.id, exists: true, data: () => snap.data() };
     }
     return { id: docId, exists: false, data: () => null };
@@ -173,7 +158,7 @@ async function safeGetDoc(collectionName: string, docId: string) {
 
 async function safeAddDoc(collectionName: string, data: any) {
   try {
-    const ref = await addDoc(collection(db, collectionName), data);
+    const ref = await db.collection(collectionName).add(data);
     return { id: ref.id };
   } catch (err: any) {
     console.warn(`[HYBRID DB] Firestore add failed for ${collectionName}. Falling back to local filesystem store: ${err.message}`);
@@ -189,7 +174,7 @@ async function safeAddDoc(collectionName: string, data: any) {
 
 async function safeSetDoc(collectionName: string, docId: string, data: any) {
   try {
-    await setDoc(doc(db, collectionName, docId), data);
+    await db.collection(collectionName).doc(docId).set(data);
     return { success: true };
   } catch (err: any) {
     console.warn(`[HYBRID DB] Firestore set failed for ${collectionName}/${docId}. Falling back to local filesystem store: ${err.message}`);
@@ -209,7 +194,7 @@ async function safeSetDoc(collectionName: string, docId: string, data: any) {
 
 async function safeUpdateDoc(collectionName: string, docId: string, data: any) {
   try {
-    await updateDoc(doc(db, collectionName, docId), data);
+    await db.collection(collectionName).doc(docId).update(data);
     return { success: true };
   } catch (err: any) {
     console.warn(`[HYBRID DB] Firestore update failed for ${collectionName}/${docId}. Falling back to local filesystem store: ${err.message}`);
@@ -227,7 +212,7 @@ async function safeUpdateDoc(collectionName: string, docId: string, data: any) {
 
 async function safeDeleteDoc(collectionName: string, docId: string) {
   try {
-    await deleteDoc(doc(db, collectionName, docId));
+    await db.collection(collectionName).doc(docId).delete();
     return { success: true };
   } catch (err: any) {
     console.warn(`[HYBRID DB] Firestore delete failed for ${collectionName}/${docId}. Falling back to local filesystem store: ${err.message}`);
@@ -256,8 +241,7 @@ app.use(express.json());
 app.post('/api/admin/seed', async (req, res) => {
   try {
     try {
-      const contactsRef = collection(db, 'contacts');
-      const existingContacts = await getDocs(query(contactsRef, limit(1)));
+      const existingContacts = await db.collection('contacts').limit(1).get();
       if (existingContacts.empty) {
         const seedContacts = [
           {
@@ -273,7 +257,7 @@ app.post('/api/admin/seed', async (req, res) => {
           }
         ];
         for (const c of seedContacts) {
-          await addDoc(collection(db, 'contacts'), c);
+          await db.collection('contacts').add(c);
         }
       }
     } catch (fsErr: any) {

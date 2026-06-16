@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   auth, 
   signInWithPopup, 
+  signInWithRedirect,
+  getRedirectResult,
   signOut, 
   onAuthStateChanged, 
   FirebaseUser,
@@ -31,17 +33,17 @@ import { Sparkles, ArrowUpRight, Github, Twitter, Linkedin, ShieldCheck, Mail, P
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState('home');
-  const [user, setUser] = useState<FirebaseUser | null>(() => {
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+
+  // Read cached sandbox user from localStorage on mount only (client-side)
+  useEffect(() => {
     try {
-      if (typeof window !== 'undefined') {
-        const cached = localStorage.getItem('active_sandbox_user');
-        if (cached) {
-          return JSON.parse(cached);
-        }
-      }
-    } catch (e) {}
-    return null;
-  });
+      const cached = typeof window !== 'undefined' ? localStorage.getItem('active_sandbox_user') : null;
+      if (cached) setUser(JSON.parse(cached));
+    } catch (e) {
+      // ignore parse errors
+    }
+  }, []);
   const [prefilledService, setPrefilledService] = useState('');
   const [consultationOpen, setConsultationOpen] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
@@ -49,9 +51,21 @@ export default function App() {
 
   // Initialize Firebase Authentication tracking
   useEffect(() => {
+    const getRedirectResultIfAny = async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result?.user) {
+          setUser(result.user);
+        }
+      } catch (redirectErr: any) {
+        console.warn('Redirect sign-in result check failed:', redirectErr);
+      }
+    };
+    getRedirectResultIfAny();
+
     const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        // If logged in via standard Google Popup, update state and cache it
+        // If logged in via standard Google Popup or redirect, update state and cache it
         setUser(firebaseUser);
         const path = `users/${firebaseUser.uid}`;
         
@@ -114,6 +128,7 @@ export default function App() {
       'https://localhost:3000',
       'http://127.0.0.1:3000',
       'https://127.0.0.1:3000',
+      'https://pixel-aicore-nexbot.firebaseapp.com'
     ];
     const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
 
@@ -128,8 +143,14 @@ export default function App() {
       console.error("Authentication popup failed: ", err);
       if (err?.code === 'auth/unauthorized-domain') {
         setAuthError(`Firebase rejected this sign-in attempt because the host domain is not authorized. Open your Firebase console and add ${currentOrigin || 'your current host'} to the authorized domains for this project.`);
-      } else if (err?.code === 'auth/popup-closed-by-user') {
-        setAuthError("The validation window was closed before completion. Because this application is running inside an iframe, your browser's third-party privacy protections or pop-up blockers might have closed it automatically. For a seamless login, please open the application in its own standalone tab or use the Sandbox Developer Bypass option below!");
+      } else if (err?.code === 'auth/popup-closed-by-user' || err?.code === 'auth/popup-blocked') {
+        setAuthError("Popup login is blocked or closed by the browser. The app will now try a redirect-based login instead.");
+        try {
+          await signInWithRedirect(auth, googleProvider);
+        } catch (redirectError: any) {
+          console.error("Redirect sign-in failed: ", redirectError);
+          setAuthError(redirectError?.message || "Redirect authentication failed. Please try again in a standalone browser window.");
+        }
       } else if (err?.code === 'auth/cancelled-popup-request') {
         setAuthError("Previous authentication popup requests were canceled. Please try again.");
       } else {
